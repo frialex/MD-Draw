@@ -51,25 +51,30 @@ var ballWorld = function(world){
 
     Physics.util.ticker.start();
 
-    Deps.autorun(function(){
-        console.log("Config Changed!");
-        var cfg = Session.get("configChange");
-        if(cfg) gravity.setAcceleration({x: cfg.gx, y: cfg.gy});
+    //Deps.autorun(function(){
+      //  console.log("Config Changed!");
+      //  var cfg = Session.get("configChange");
+      //  if(cfg) gravity.setAcceleration({x: cfg.gx, y: cfg.gy});
 
-    });
-    worldConfig = {
-        gx: 0,
-        submit: function(data){Session.set("configChange", this);}
-    };
+//    });
+    worldConfig = { xx:0 };
 
 	Object.defineProperty(worldConfig, "gy", {get: function(){return gy; },
-						  set: function(val){gy = val;}});
+						  set: function(val){
+		gravity.setAcceleration({x: worldConfig.gx, y: val}); gy = val;}});
+
+
+//Why can't gx be defined the same way?
+//	Object.defineProperty(worldConfig, "gx", {get: function(){return gx; },
+//						  set: function(val){
+//		gravity.setAcceleration({x: val, y: worldConfig.gy}); gx = val;}});
+
 	worldConfig.gy = 0.0004;
+	worldConfig.gx = 0; 
 
     gui = new dat.GUI();
     gui.add(worldConfig, "gx").min(-1/100).max(1/100).step(1/10000);
     gui.add(worldConfig, "gy").min(-1/100).max(1/100).step(1/10000);
-    gui.add(worldConfig, "submit");
 
 
 
