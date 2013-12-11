@@ -51,23 +51,23 @@ var ballWorld = function(world){
 
     Physics.util.ticker.start();
 
-    //Deps.autorun(function(){
-      //  console.log("Config Changed!");
-      //  var cfg = Session.get("configChange");
-      //  if(cfg) gravity.setAcceleration({x: cfg.gx, y: cfg.gy});
+    worldConfig = {  };
 
-//    });
-    worldConfig = { xx:0 };
+	Object.defineProperty(worldConfig, "gy", 
+		{
+		get: function(){return gy;},
+		set: function(val){
+			gravity.setAcceleration({y: val}); gy = val;}
+		});
 
-	Object.defineProperty(worldConfig, "gy", {get: function(){return gy; },
-						  set: function(val){
-		gravity.setAcceleration({x: worldConfig.gx, y: val}); gy = val;}});
-
-
-//Why can't gx be defined the same way?
-//	Object.defineProperty(worldConfig, "gx", {get: function(){return gx; },
-//						  set: function(val){
-//		gravity.setAcceleration({x: val, y: worldConfig.gy}); gx = val;}});
+	Object.defineProperty(worldConfig, "gx",
+		{
+		get: function(){return gx;},
+		set: function(newgx){
+			gravity.setAcceleration({x: newgx}); gx = newgx;}
+		});
+//Can only set one direction at a time. gx referenced from gy's setter => gx undef error
+//TODO: Can gravity be set to music?
 
 	worldConfig.gy = 0.0004;
 	worldConfig.gx = 0; 
